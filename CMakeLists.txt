@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.0)
+project(RayTracer)
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(include)
+
+add_executable(RayTracer
+        include/color.h
+        include/ray.h
+        include/vec3.h
+        src/main.cpp)
