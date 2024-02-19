@@ -9,4 +9,6 @@ add_executable(RayTracer
         include/color.h
         include/ray.h
         include/vec3.h
+	include/hittable.h
+	include/sphere.h
         src/main.cpp)
