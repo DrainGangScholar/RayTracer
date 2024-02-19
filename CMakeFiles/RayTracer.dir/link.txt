@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/RayTracer.dir/src/main.cpp.o -o RayTracer 

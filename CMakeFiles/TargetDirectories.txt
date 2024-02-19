@@ -1,3 +1,0 @@
-/home/boss/Projects/RayTracer/CMakeFiles/RayTracer.dir
-/home/boss/Projects/RayTracer/CMakeFiles/edit_cache.dir
-/home/boss/Projects/RayTracer/CMakeFiles/rebuild_cache.dir
