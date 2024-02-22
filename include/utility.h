@@ -3,7 +3,6 @@
 #include <cmath>
 #include <limits>
 #include <memory>
-
 // Usings
 
 using std::make_shared;

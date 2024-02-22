@@ -11,4 +11,6 @@ add_executable(RayTracer
         include/vec3.h
 	include/hittable.h
 	include/sphere.h
-        src/main.cpp)
+        src/main.cpp
+		include/interval.h
+		include/camera.h)
