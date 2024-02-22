@@ -8,6 +8,7 @@ class camera {
 public:
     double aspect_ratio = 1.0;
     int image_width = 100;
+    int samples_per_pixel;
 
     void render(const hittable &world) {
         initialize();
@@ -17,16 +18,32 @@ public:
         for (int i = 0; i < image_height; i++) {
             std::clog << "\rScanlines remaining: " << (image_height - i) << ' ' << std::flush;
             for (int j = 0; j < image_width; j++) {
-                auto pixel_center = pixel100_loc + (i * pixel_delta_v) + (j * pixel_delta_u);
-                auto ray_direction = pixel_center - center;
-                ray r(center, ray_direction);
-
-                color pixel_color = ray_color(r, world);
-                write_color(std::cout, pixel_color);
+                color pixel_color(0,0,0);
+                for(int sample=0;sample<samples_per_pixel;sample++) {
+                    ray r = get_ray(j,i);
+                    pixel_color+=ray_color(r,world);
+                }
+                write_color(std::cout, pixel_color,samples_per_pixel);
             }
         }
 
         std::clog << "\rDone.                 \n";
+    }
+
+    ray get_ray(int i, int j) const {
+        auto pixel_center = pixel100_loc+(i*pixel_delta_u)+(j*pixel_delta_v);
+        auto pixel_sample = pixel_center + pixel_sample_square();
+
+        auto ray_origin=center;
+        auto ray_direction=pixel_sample-ray_origin;
+
+        return ray(ray_origin, ray_direction);
+    }
+
+    vec3 pixel_sample_square() const {
+        auto px = -0.5+random_double();
+        auto py = -0.5+random_double();
+        return (px*pixel_delta_u)+(py*pixel_delta_v);
     }
 
 private:
