@@ -5,6 +5,7 @@
 #include "vec3.h"
 #include"material.h"
 #include <iostream>
+#include <sstream>
 
 class camera {
 public:
@@ -16,7 +17,9 @@ public:
   void render(const hittable &world) {
     initialize();
 
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    std::ostringstream oss;
+
+    oss << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int i = 0; i < image_height; i++) {
       std::clog << "\rScanlines remaining: " << (image_height - i) << ' '
@@ -27,9 +30,11 @@ public:
           ray r = get_ray(j, i);
           pixel_color += ray_color(r, max_depth, world);
         }
-        write_color(std::cout, pixel_samples_scale * pixel_color);
+        write_color(oss, pixel_samples_scale * pixel_color);
       }
     }
+
+    std::cout<< oss.str();
 
     std::clog << "\rDone.                 \n";
   }
