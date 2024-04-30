@@ -2,8 +2,9 @@
 
 #include "color.h"
 #include "hittable.h"
+#include "material.h"
+#include "utility.h"
 #include "vec3.h"
-#include"material.h"
 #include <iostream>
 #include <sstream>
 
@@ -13,6 +14,10 @@ public:
   int image_width = 100;
   int samples_per_pixel = 10;
   int max_depth = 10;
+  double vfov = 90;
+  point3 lookfrom = point3(0, 0, 0);
+  point3 lookat = point3(0, 0, -1);
+  vec3 vup = vec3(0, 1, 0);
 
   void render(const hittable &world) {
     initialize();
@@ -22,8 +27,9 @@ public:
     oss << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int i = 0; i < image_height; i++) {
-      std::clog << "\rScanlines remaining: " << (image_height - i) << ' '
-                << std::flush;
+      //      std::clog << "\rScanlines remaining: " << (image_height - i) << '
+      //      '
+      //                << std::flush;
       for (int j = 0; j < image_width; j++) {
         color pixel_color(0, 0, 0);
         for (int sample = 0; sample < samples_per_pixel; sample++) {
@@ -34,7 +40,7 @@ public:
       }
     }
 
-    std::cout<< oss.str();
+    std::cout << oss.str();
 
     std::clog << "\rDone.                 \n";
   }
@@ -63,6 +69,7 @@ private:
   vec3 pixel_delta_u;
   vec3 pixel_delta_v;
   double pixel_samples_scale;
+  vec3 u, v, w;
 
   void initialize() {
     image_height = static_cast<int>(image_width / aspect_ratio);
@@ -70,17 +77,23 @@ private:
 
     pixel_samples_scale = 1.0 / samples_per_pixel;
 
-    center = point3(0, 0, 0);
+    center = lookfrom;
 
     // viewport dimensions
-    auto focal_length = 1.0;
-    auto viewport_height = 2.0;
+    auto focal_length = (lookfrom - lookat).length();
+    auto theta = degrees_to_radians(vfov);
+    auto h = tan(theta / 2);
+    auto viewport_height = 2.0 * h * focal_length;
     auto viewport_width =
         viewport_height * (static_cast<double>(image_width) / image_height);
 
+    w = unit_vector(lookfrom - lookat);
+    u = unit_vector(cross(vup, w));
+    v = cross(w, u);
+
     // u and v vector
-    auto viewport_u = vec3(viewport_width, 0, 0);
-    auto viewport_v = vec3(0, -viewport_height, 0);
+    auto viewport_u = viewport_width * u;
+    auto viewport_v = viewport_height * -v;
 
     // pixel to pixel delta u, delta v
     pixel_delta_u = viewport_u / image_width;
@@ -88,7 +101,7 @@ private:
 
     // upper left pixel position
     auto viewport_upper_left =
-        center - vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
+        center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
     pixel100_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
   }
 
