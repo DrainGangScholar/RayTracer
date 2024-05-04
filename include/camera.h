@@ -27,9 +27,8 @@ public:
     oss << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int i = 0; i < image_height; i++) {
-      //      std::clog << "\rScanlines remaining: " << (image_height - i) << '
-      //      '
-      //                << std::flush;
+      std::clog << "\rScanlines remaining: " << (image_height - i) << ' '
+                << std::flush;
       for (int j = 0; j < image_width; j++) {
         color pixel_color(0, 0, 0);
         for (int sample = 0; sample < samples_per_pixel; sample++) {

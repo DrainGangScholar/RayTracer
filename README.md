@@ -18,11 +18,12 @@ Below is the result of following the tutorial:
 To run the code:
 
 1. Clone the repository.
-2. ``mkdir build``
-3. ``cd build``
-4. ``cmake ..``
-5. ``cmake --build .``
-6. ``./RayTracer > image.ppm``
+2. ``cd RayTracer``
+3. ``mkdir build``
+4. ``cd build``
+5. ``cmake ..``
+6. ``cmake --build .``
+7. ``./RayTracer > image.ppm``
 
 Please note that this ray tracer runs on the CPU, which can be slow for complex scenes. In the future, parallelization techniques or a GPU implementation could be explored to improve performance.
 
