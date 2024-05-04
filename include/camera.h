@@ -6,6 +6,7 @@
 #include "utility.h"
 #include "vec3.h"
 #include <iostream>
+#include <omp.h>
 #include <sstream>
 
 class camera {
@@ -29,17 +30,24 @@ public:
 
     oss << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
+    const int num_threads = 24;
+    std::vector<std::ostringstream> thread_outputs(num_threads);
+#pragma omp parallel for num_threads(num_threads)
     for (int i = 0; i < image_height; i++) {
-      std::clog << "\rScanlines remaining: " << (image_height - i) << ' '
-                << std::flush;
       for (int j = 0; j < image_width; j++) {
+        const auto thread_id = omp_get_thread_num();
         color pixel_color(0, 0, 0);
         for (int sample = 0; sample < samples_per_pixel; sample++) {
           ray r = get_ray(j, i);
           pixel_color += ray_color(r, max_depth, world);
         }
-        write_color(oss, pixel_samples_scale * pixel_color);
+#pragma omp critical
+        write_color(thread_outputs[thread_id],
+                    pixel_samples_scale * pixel_color);
       }
+    }
+    for (const auto &thread_output : thread_outputs) {
+      oss << thread_output.str();
     }
 
     std::cout << oss.str();
