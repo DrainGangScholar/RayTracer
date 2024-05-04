@@ -11,7 +11,7 @@ Ray tracing is a rendering technique used to generate realistic images by tracin
 
 Below is the result of following the tutorial:
 
-![Ray Tracing Result](result.jpg)
+![Ray Tracing Result](assets/result.jpg)
 
 ## How to Run
 
