@@ -30,7 +30,7 @@ public:
 
     oss << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
-    const int num_threads = 24;
+    const int num_threads = 12;
     std::vector<std::ostringstream> thread_outputs(num_threads);
 #pragma omp parallel for num_threads(num_threads)
     for (int i = 0; i < image_height; i++) {
